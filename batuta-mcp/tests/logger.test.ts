@@ -1,5 +1,10 @@
-import { test, expect } from "bun:test";
+import { test, expect, afterEach } from "bun:test";
 import { logger, setSink, setVerbose } from "../src/lib/logger";
+
+afterEach(() => {
+  setSink((l) => console.error(l));
+  setVerbose(false);
+});
 
 test("logger envía info al sink con prefijo", () => {
   const lines: string[] = [];

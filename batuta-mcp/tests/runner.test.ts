@@ -20,6 +20,6 @@ test("bunRunner ejecuta un proceso real y captura stdout", async () => {
 });
 
 test("bunRunner respeta el timeout", async () => {
-  const r = await bunRunner.run(["bun", "-e", "await Bun.sleep(2000)"], { timeoutMs: 150 });
+  const r = await bunRunner.run(["bun", "-e", "await Bun.sleep(10000)"], { timeoutMs: 200 });
   expect(r.code).not.toBe(0);
 });

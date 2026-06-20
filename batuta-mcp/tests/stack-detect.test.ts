@@ -21,6 +21,10 @@ test("detecta Go y Python", async () => {
   expect(await detectStack(reader(["pyproject.toml"]))).toContain("Python");
 });
 
+test("detecta Python por requirements.txt", async () => {
+  expect(await detectStack(reader(["requirements.txt"]))).toContain("Python");
+});
+
 test("devuelve undefined si no reconoce nada", async () => {
   expect(await detectStack(reader([]))).toBeUndefined();
 });

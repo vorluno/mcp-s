@@ -13,6 +13,12 @@ test("rechaza escapes y rutas absolutas", () => {
   expect(isBoundarySafe("C:\\Windows")).toBe(false);
 });
 
+test("permite dots no-segmento y rechaza vacío", () => {
+  expect(isBoundarySafe("a..b")).toBe(true);
+  expect(isBoundarySafe("src/v1.2/x.ts")).toBe(true);
+  expect(isBoundarySafe("")).toBe(false);
+});
+
 test("unsafeBoundaries reporta plan + frontera ofensora", () => {
   expect(
     unsafeBoundaries([
