@@ -31,3 +31,18 @@ test("plan prompt incluye título, fronteras y es agnóstico sin hint", () => {
   expect(p).toContain("src/auth.ts");
   expect(p.toLowerCase()).toContain("test");
 });
+
+test("sin stackHint: decompose y fix-overlaps no traen stack hardcodeado", () => {
+  const dec = buildDecomposePrompt("mi tarea");
+  expect(dec).not.toContain("Bun");
+  expect(dec).not.toContain("Batuta");
+
+  const plans = [
+    { title: "A", specMd: "", fileBoundaries: ["x.ts"], branchSlug: "a" },
+    { title: "B", specMd: "", fileBoundaries: ["x.ts"], branchSlug: "b" },
+  ];
+  const fix = buildFixOverlapsPrompt("mi tarea", plans, [{ a: "a", b: "b", overlap: ["x.ts"] }]);
+  expect(fix).not.toContain("Bun");
+  expect(fix).not.toContain("Batuta");
+  expect(fix).toContain("mi tarea"); // brainDump passthrough
+});
