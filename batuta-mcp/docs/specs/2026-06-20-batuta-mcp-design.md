@@ -129,8 +129,13 @@ Cada tool define `inputSchema` y `outputSchema` con Zod y devuelve `structuredCo
      parcialmente algo que va a chocar).
   3. `path-safety`: rechaza cualquier `fileBoundary` con `..`, raíz absoluta distinta, o que
      escape de `repoPath`.
-- **Lógica:** por plan, `git -C <repoPath> worktree add <repoPath>/.worktrees/<branchSlug> -b <branchSlug>`
-  (con reintento por colisión: sufijo único, ya en `worktree.ts`). Genera `suggestedPrompt`
+  4. `path-safety` del `branchSlug`: rechaza cualquier `branchSlug` inseguro (`..`, absoluto)
+     vía `isBoundarySafe`, porque se interpola en la ruta del worktree (`.worktrees/<branchSlug>`)
+     y podría escapar del repo.
+- **Lógica:** por plan, `git -C <repoPath> worktree add <repoPath>/.worktrees/<branchSlug> -b <branchSlug>`.
+  Si el worktree/branch ya existe (`already exists`/`already used`), reporta `status:"exists"`
+  de forma **idempotente, sin auto-renombrar** (decisión de diseño para un tool stateless:
+  nombres de branch predecibles, sin sufijos sorpresa). Genera `suggestedPrompt`
   con `buildPlanPrompt` generalizado por stack. Con `dryRun:true` devuelve `command` y
   `suggestedPrompt` sin tocar el disco (`status:"created"` simulado marcado como dry-run en `message`).
 - **Tolerancia a fallos:** un plan que falle queda `status:"error"` con `message`; los demás
