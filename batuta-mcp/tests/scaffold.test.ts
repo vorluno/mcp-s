@@ -66,6 +66,17 @@ test("crea worktree real (status created)", async () => {
   expect(runner.calls[1]!.cmd).toContain("worktree");
 });
 
+test("rechaza branchSlug con traversal (no escapa de .worktrees)", async () => {
+  const runner = new FakeRunner([okRepo]); // solo rev-parse debe correr
+  const res = await scaffoldWorktrees(
+    { repoPath: "/x", plans: [{ title: "evil", specMd: "", fileBoundaries: ["a.ts"], branchSlug: "../../evil" }] },
+    { runner },
+  );
+  expect(res.ok).toBe(false);
+  expect(res.error?.toLowerCase()).toContain("branchslug");
+  expect(runner.calls.length).toBe(1); // no se ejecutó worktree add
+});
+
 test("aísla fallos por plan: uno falla, el otro se crea", async () => {
   const runner = new FakeRunner([
     okRepo,                                            // rev-parse pre-flight

@@ -1,6 +1,6 @@
 import type { Plan, Runner, ScaffoldResult } from "../types";
 import { checkBoundaryOverlaps } from "./boundaries";
-import { unsafeBoundaries } from "../lib/path-safety";
+import { unsafeBoundaries, isBoundarySafe } from "../lib/path-safety";
 import { buildPlanPrompt } from "../lib/prompts";
 
 export function worktreePathFor(repoPath: string, branchSlug: string): string {
@@ -48,6 +48,12 @@ export async function scaffoldWorktrees(
   const unsafe = unsafeBoundaries(plans);
   if (unsafe.length > 0) {
     return { ok: false, error: `unsafe boundaries: ${JSON.stringify(unsafe)}`, results: [] };
+  }
+  const unsafeSlugs = plans
+    .filter((p) => !isBoundarySafe(p.branchSlug))
+    .map((p) => p.branchSlug);
+  if (unsafeSlugs.length > 0) {
+    return { ok: false, error: `unsafe branchSlug(s): ${JSON.stringify(unsafeSlugs)}`, results: [] };
   }
 
   const results: ScaffoldResult[] = [];
