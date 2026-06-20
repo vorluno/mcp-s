@@ -65,3 +65,19 @@ test("crea worktree real (status created)", async () => {
   expect(res.results[0]!.status).toBe("created");
   expect(runner.calls[1]!.cmd).toContain("worktree");
 });
+
+test("aísla fallos por plan: uno falla, el otro se crea", async () => {
+  const runner = new FakeRunner([
+    okRepo,                                            // rev-parse pre-flight
+    { code: 0, stdout: "", stderr: "" },               // plan "a" → created
+    { code: 1, stdout: "", stderr: "fatal: boom" },    // plan "b" → error
+  ]);
+  const res = await scaffoldWorktrees(
+    { repoPath: "/x", plans: [plan("a", ["a.ts"]), plan("b", ["b.ts"])] },
+    { runner },
+  );
+  expect(res.ok).toBe(true);
+  expect(res.results[0]!.status).toBe("created");
+  expect(res.results[1]!.status).toBe("error");
+  expect(res.results[1]!.message).toContain("boom");
+});
