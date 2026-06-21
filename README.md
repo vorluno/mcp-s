@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="./assets/banner.jpg" alt="mcp-s — Vorluno's family of MCP servers" width="100%" />
+
 # mcp-s
 
 **Vorluno's family of Model Context Protocol servers.**
