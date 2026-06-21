@@ -8,6 +8,7 @@ publicarse y clonarse por separado. Este repo solo los lista.
 | MCP | Repo | Descripción |
 |---|---|---|
 | **batuta-mcp** | https://github.com/vorluno/batuta-mcp | Descompone tareas en planes con fronteras de archivos disjuntas y crea git worktrees. Para Warp / Claude Code. |
+| **agora-mcp** | https://github.com/vorluno/agora-mcp | Espacio compartido por repo: las sesiones de Claude Code ven qué hacen las demás, avisos de colisión, notas y persistencia (hooks + MCP + SQLite WAL). |
 
 ## Convención
 
